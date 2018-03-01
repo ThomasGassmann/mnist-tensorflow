@@ -25,11 +25,8 @@ def add_layer(input_tensor, output_size):
 h1 = add_layer(x, 256)
 # Second hidden layer
 h2 = add_layer(h1, 128)
-
 # Output layer
 logits = add_layer(h2, 10)
-
-prediction = session.run(predictor, {x: x_test})
 
 # Compute cross entropy between actual values and outputs
 loss_function = tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=logits)
@@ -45,8 +42,9 @@ for step in range(training_steps):
     session.run(optimizer, {x: x_batch, y: y_batch})
 
 # Evaluate accuracy
-predictor = tf.nn.softmax(logits)
 x_test, y_test = mnist.test.next_batch(10000)
+predictor = tf.nn.softmax(logits)
+prediction = session.run(predictor, {x: x_test})
 prediction_vector = np.argmax(prediction, axis = 1)
 accuracy = np.mean(np.argmax(y_test, axis = 1) == prediction_vector)
 print(accuracy)
